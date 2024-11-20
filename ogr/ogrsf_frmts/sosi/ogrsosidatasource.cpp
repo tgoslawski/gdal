@@ -733,10 +733,12 @@ void OGRSOSIDataSource::buildOGRMultiPoint(int nNumCoo, long iSerial)
     long i;
     double dfEast = 0.0;
     double dfNorth = 0.0;
+    double dfHeight = 0.0;
     for (i = (nNumCoo > 1) ? 2 : 1; i <= nNumCoo; i++)
     {
+        LC_GetTH(i, &dfHeight);
         LC_GetTK(i, &dfEast, &dfNorth);
-        OGRPoint poP = OGRPoint(dfEast, dfNorth);
+        OGRPoint poP = OGRPoint(dfEast, dfNorth, dfHeight);
         poMP->addGeometry(&poP); /*poP will be cloned before returning*/
     }
     papoBuiltGeometries[iSerial] = poMP;
@@ -753,11 +755,12 @@ void OGRSOSIDataSource::buildOGRLineString(int nNumCoo, long iSerial)
     poLS->setNumPoints(nNumCoo);
 
     int i;
-    double dfEast = 0, dfNorth = 0;
+    double dfEast = 0, dfNorth = 0, dfHeight = 0;
     for (i = 1; i <= nNumCoo; i++)
     {
+        LC_GetTH(i, &dfHeight);
         LC_GetTK(i, &dfEast, &dfNorth);
-        poLS->setPoint(i - 1, dfEast, dfNorth);
+        poLS->setPoint(i - 1, dfEast, dfNorth, dfHeight);
     }
     papoBuiltGeometries[iSerial] = poLS;
 }
@@ -838,7 +841,8 @@ void OGRSOSIDataSource::buildOGRLineStringFromArc(long iSerial)
 
 void OGRSOSIDataSource::buildOGRPoint(long iSerial)
 {
-    double dfEast = 0, dfNorth = 0;
+    double dfEast = 0, dfNorth = 0, dfHeight = 0;
+    LC_GetTH(1, &dfHeight);
     LC_GetTK(1, &dfEast, &dfNorth);
-    papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth);
+    papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth, dfHeight);
 }
