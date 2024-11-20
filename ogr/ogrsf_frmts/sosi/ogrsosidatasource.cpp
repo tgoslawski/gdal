@@ -842,7 +842,7 @@ void OGRSOSIDataSource::buildOGRLineStringFromArc(long iSerial)
 void OGRSOSIDataSource::buildOGRPoint(long iSerial)
 {
     double dfEast = 0, dfNorth = 0, dfHeight = 0;
-    dfHeight = LC_GetTH(i);
+    dfHeight = LC_GetTH(1);
     LC_GetTK(1, &dfEast, &dfNorth);
     papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth, dfHeight);
 }
