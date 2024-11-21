@@ -759,7 +759,7 @@ void OGRSOSIDataSource::buildOGRLineString(int nNumCoo, long iSerial)
     for (i = 1; i <= nNumCoo; i++)
     {
         dfHeight = LC_GetTH(i);
-        CPLDebug("[CreateLayer]", "height: %d", dfHeight);
+        CPLError(CE_Warning, CPLE_AppDefined, "height: %d", dfHeight);
         LC_GetTK(i, &dfEast, &dfNorth);
         poLS->setPoint(i - 1, dfEast, dfNorth, dfHeight);
     }
