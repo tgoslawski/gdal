@@ -738,12 +738,7 @@ void OGRSOSIDataSource::buildOGRMultiPoint(int nNumCoo, long iSerial)
     {
         dfHeight = LC_GetTH(i);
         LC_GetTK(i, &dfEast, &dfNorth);
-        if (dfHeight != nullptr) {
-            OGRPoint poP = OGRPoint(dfEast, dfNorth, dfHeight);
-        }
-        else {
-            OGRPoint poP = OGRPoint(dfEast, dfNorth);
-        }
+        OGRPoint poP = OGRPoint(dfEast, dfNorth, dfHeight);
         poMP->addGeometry(&poP); /*poP will be cloned before returning*/
     }
     papoBuiltGeometries[iSerial] = poMP;
@@ -764,11 +759,9 @@ void OGRSOSIDataSource::buildOGRLineString(int nNumCoo, long iSerial)
     for (i = 1; i <= nNumCoo; i++)
     {
         dfHeight = LC_GetTH(i);
+        CPLDebug("[CreateLayer]", "height: %d", dfHeight);
         LC_GetTK(i, &dfEast, &dfNorth);
-        poLS->setPoint(i - 1, dfEast, dfNorth);
-        if (dfHeight != nullptr)  {
-            poLS->setZ(i - 1, dfHeight);
-        }
+        poLS->setPoint(i - 1, dfEast, dfNorth, dfHeight);
     }
     papoBuiltGeometries[iSerial] = poLS;
 }
@@ -852,10 +845,5 @@ void OGRSOSIDataSource::buildOGRPoint(long iSerial)
     double dfEast = 0, dfNorth = 0, dfHeight = 0;
     dfHeight = LC_GetTH(1);
     LC_GetTK(1, &dfEast, &dfNorth);
-    if (dfHeight != nullptr) {
-        papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth, dfHeight);
-    }
-    else {
-        papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth);
-    }
+    papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth, dfHeight);
 }
