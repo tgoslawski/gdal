@@ -389,15 +389,15 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                     // return NULL;
                     break;
                 }
+                else {
+                        oGType = poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType();
+                    }
                 const OGRLineString *poCurve =
                     poParent->papoBuiltGeometries[oNextSerial.lNr]
                         ->toLineString();
                 poGeom.reset(poCurve->clone());
                 break;
             }
-            else {
-                    oGType = poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType();
-                }
             case L_TEKST:
             { /* text */
                 oGType = wkbMultiPoint;
