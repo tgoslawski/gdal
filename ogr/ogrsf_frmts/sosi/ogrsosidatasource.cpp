@@ -845,8 +845,8 @@ void OGRSOSIDataSource::buildOGRPoint(long iSerial)
     double dfEast = 0, dfNorth = 0, dfHeight = 0;
     dfHeight = LC_GetHoyde(1);
     LC_GetTK(1, &dfEast, &dfNorth);
-    CPLError(CE_Warning, CPLE_AppDefined, "height: %d", dfHeight);
-    CPLError(CE_Warning, CPLE_AppDefined, "east: %d", dfEast);
-    CPLError(CE_Warning, CPLE_AppDefined, "north: %d", dfNorth);
+    CPLError(CE_Warning, CPLE_AppDefined, "height: %lf", dfHeight);
+    CPLError(CE_Warning, CPLE_AppDefined, "east: %lf", dfEast);
+    CPLError(CE_Warning, CPLE_AppDefined, "north: %lf", dfNorth);
     papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth, dfHeight);
 }
