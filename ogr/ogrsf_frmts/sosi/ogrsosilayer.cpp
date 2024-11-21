@@ -422,10 +422,9 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
             }
             case L_PUNKT:
             { /* point */
-                oGType = wkbPointZM;
+                oGType = wkbPoint25D;
                 if (poParent->papoBuiltGeometries[oNextSerial.lNr] == nullptr ||
-                    poParent->papoBuiltGeometries[oNextSerial.lNr]
-                            ->getGeometryType() != wkbPointZM)
+                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbPoint25D)
                 {
                     // This should not happen under normal operation.
                     CPLError(CE_Warning, CPLE_AppDefined,
@@ -454,10 +453,7 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
 
         if (poGeom == nullptr)
             continue; /* skipping L_HODE and unrecognized groups */
-        if (oGType != poFeatureDefn->GetGeomType())
-        {
-            continue; /* skipping features that are not the correct geometry */
-        }
+
 
         OGRFeature *poFeature = new OGRFeature(poFeatureDefn);
 
