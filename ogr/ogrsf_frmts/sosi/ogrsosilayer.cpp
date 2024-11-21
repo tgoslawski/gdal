@@ -267,7 +267,7 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                         break;
                     }
                     OGRGeometry *geom = poParent->papoBuiltGeometries[nRefNr];
-                    if (geom->getGeometryType() == wkbLineString)
+                    if (geom->getGeometryType() == wkbLineString || geom->getGeometryType() == wkbMultiLineString25D)
                     {
                         OGRLineString *poCurve = geom->toLineString();
                         if (nRefStatus == LC_MED_DIG)
@@ -334,7 +334,7 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                             }
                             OGRGeometry *geom =
                                 poParent->papoBuiltGeometries[nRefNr];
-                            if (geom->getGeometryType() == wkbLineString)
+                            if (geom->getGeometryType() == wkbLineString || geom->getGeometryType() == wkbMultiLineString25D)
                             {
                                 OGRLineString *poCurve = geom->toLineString();
                                 if (poInner && nRefStatus == LC_MED_DIG)
@@ -378,8 +378,9 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
             { /* curve, interpolated from circular arc */
                 oGType = wkbLineString;
                 if (poParent->papoBuiltGeometries[oNextSerial.lNr] == nullptr ||
-                    poParent->papoBuiltGeometries[oNextSerial.lNr]
-                            ->getGeometryType() != wkbLineString)
+                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbLineString ||
+                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbLineString25D
+                    )
                 {
                     // This should not happen under normal operation.
                     CPLError(CE_Warning, CPLE_AppDefined,
@@ -394,12 +395,16 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                 poGeom.reset(poCurve->clone());
                 break;
             }
+            else {
+                    oGType = poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType();
+                }
             case L_TEKST:
             { /* text */
                 oGType = wkbMultiPoint;
                 if (poParent->papoBuiltGeometries[oNextSerial.lNr] == nullptr ||
-                    poParent->papoBuiltGeometries[oNextSerial.lNr]
-                            ->getGeometryType() != wkbMultiPoint)
+                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbMultiPoint ||
+                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbMultiPoint25D
+                    )
                 {
                     // This should not happen under normal operation.
                     CPLError(CE_Warning, CPLE_AppDefined,
@@ -407,6 +412,9 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                              oNextSerial.lNr);
                     // return NULL;
                     break;
+                }
+                else {
+                    oGType = poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType();
                 }
                 const OGRMultiPoint *poMP =
                     poParent->papoBuiltGeometries[oNextSerial.lNr]
@@ -424,7 +432,9 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
             { /* point */
                 oGType = wkbPoint25D;
                 if (poParent->papoBuiltGeometries[oNextSerial.lNr] == nullptr ||
-                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbPoint25D)
+                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbPoint ||
+                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbPoint25D
+                    )
                 {
                     // This should not happen under normal operation.
                     CPLError(CE_Warning, CPLE_AppDefined,
@@ -432,6 +442,9 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                              oNextSerial.lNr);
                     // return NULL;
                     break;
+                }
+                else {
+                    oGType = poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType();
                 }
                 const OGRPoint *poPoint =
                     poParent->papoBuiltGeometries[oNextSerial.lNr]->toPoint();
@@ -453,7 +466,11 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
 
         if (poGeom == nullptr)
             continue; /* skipping L_HODE and unrecognized groups */
-
+        /* find better way to secure this */
+        // if (oGType != poFeatureDefn->GetGeomType())
+        // {
+        //     continue; /* skipping features that are not the correct geometry */
+        // }
 
         OGRFeature *poFeature = new OGRFeature(poFeatureDefn);
 

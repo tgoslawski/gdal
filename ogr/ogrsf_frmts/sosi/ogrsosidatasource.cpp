@@ -736,9 +736,14 @@ void OGRSOSIDataSource::buildOGRMultiPoint(int nNumCoo, long iSerial)
     double dfHeight = 0.0;
     for (i = (nNumCoo > 1) ? 2 : 1; i <= nNumCoo; i++)
     {
-        dfHeight = LC_GetTH(i);
+        dfHeight = LC_GetHoyde(i);
         LC_GetTK(i, &dfEast, &dfNorth);
-        OGRPoint poP = OGRPoint(dfEast, dfNorth, dfHeight);
+        if (dfHeight != HOYDE_MANGLER) {
+            OGRPoint poP = OGRPoint(dfEast, dfNorth, dfHeight);
+        }
+        else {
+            OGRPoint poP = OGRPoint(dfEast, dfNorth);
+        }
         poMP->addGeometry(&poP); /*poP will be cloned before returning*/
     }
     papoBuiltGeometries[iSerial] = poMP;
@@ -758,10 +763,16 @@ void OGRSOSIDataSource::buildOGRLineString(int nNumCoo, long iSerial)
     double dfEast = 0, dfNorth = 0, dfHeight = 0;
     for (i = 1; i <= nNumCoo; i++)
     {
-        dfHeight = LC_GetTH(i);
+        dfHeight = LC_GetHoyde(i);
         CPLError(CE_Warning, CPLE_AppDefined, "height: %d", dfHeight);
         LC_GetTK(i, &dfEast, &dfNorth);
-        poLS->setPoint(i - 1, dfEast, dfNorth, dfHeight);
+        if (dfHeight != HOYDE_MANGLER) {
+            poLS->setPoint(i - 1, dfEast, dfNorth, dfHeight);
+        }
+        else {
+            poLS->setPoint(i - 1, dfEast, dfNorth);
+        }
+        
     }
     papoBuiltGeometries[iSerial] = poLS;
 }
@@ -783,9 +794,18 @@ void OGRSOSIDataSource::buildOGRLineStringFromArc(long iSerial)
     /* fetch reference points on circle (easting, northing) */
     double e1 = 0, e2 = 0, e3 = 0;
     double n1 = 0, n2 = 0, n3 = 0;
+    double h1 = 0, h2 = 0, h3 = 0;
+
     LC_GetTK(1, &e1, &n1);
+    h1 = LC_GetHoyde(1);
+
     LC_GetTK(2, &e2, &n2);
+    h2 = LC_GetHoyde(2);
+
+
     LC_GetTK(3, &e3, &n3);
+    h3 = LC_GetHoyde(3);
+
 
     /* helper constants */
     double p12 = (e1 * e1 - e2 * e2 + n1 * n1 - n2 * n2) / 2;
@@ -825,17 +845,27 @@ void OGRSOSIDataSource::buildOGRLineStringFromArc(long iSerial)
     poLS->setNumPoints(npt);
     dth = dth / (npt - 1);
 
+    /* Z interpolation step */
+    double dZ = (h3 - h1) / (npt - 1);
+
     for (int i = 0; i < npt; i++)
     {
         const double dfEast = cE + r * cos(th1 + dth * i);
         const double dfNorth = cN + r * sin(th1 + dth * i);
+        const double dfHeight = h1 + dZ * i; // Linearly interpolate Z
+
         if (dfEast != dfEast)
         { /* which is a wonderful property of nans */
             CPLError(CE_Warning, CPLE_AppDefined,
                      "Calculated %lf for point %d of %d in curve %li.", dfEast,
                      i, npt, iSerial);
         }
-        poLS->setPoint(i, dfEast, dfNorth);
+        if (h1 != HOYDE_MANGLER) {
+            poLS->setPoint(i, dfEast, dfNorth, dfHeight);
+        }
+        else {
+            poLS->setPoint(i, dfEast, dfNorth);
+        }
     }
     papoBuiltGeometries[iSerial] = poLS;
 }
@@ -845,8 +875,13 @@ void OGRSOSIDataSource::buildOGRPoint(long iSerial)
     double dfEast = 0, dfNorth = 0, dfHeight = 0;
     dfHeight = LC_GetHoyde(1);
     LC_GetTK(1, &dfEast, &dfNorth);
-    CPLError(CE_Warning, CPLE_AppDefined, "height: %lf", dfHeight);
-    CPLError(CE_Warning, CPLE_AppDefined, "east: %lf", dfEast);
-    CPLError(CE_Warning, CPLE_AppDefined, "north: %lf", dfNorth);
-    papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth, dfHeight);
+    /*  CPLError(CE_Warning, CPLE_AppDefined, "height: %lf", dfHeight);
+        CPLError(CE_Warning, CPLE_AppDefined, "east: %lf", dfEast);
+        CPLError(CE_Warning, CPLE_AppDefined, "north: %lf", dfNorth); */
+    if (dfHeight != HOYDE_MANGLER) {
+        papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth, dfHeight);
+    }
+    else {
+        papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth);
+    }
 }
