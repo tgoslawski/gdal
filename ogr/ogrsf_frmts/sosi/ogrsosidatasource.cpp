@@ -843,7 +843,7 @@ void OGRSOSIDataSource::buildOGRLineStringFromArc(long iSerial)
 void OGRSOSIDataSource::buildOGRPoint(long iSerial)
 {
     double dfEast = 0, dfNorth = 0, dfHeight = 0;
-    dfHeight = LC_GetTH(1);
+    dfHeight = LC_GetHoyde(1);
     LC_GetTK(1, &dfEast, &dfNorth);
     CPLError(CE_Warning, CPLE_AppDefined, "height: %d", dfHeight);
     CPLError(CE_Warning, CPLE_AppDefined, "east: %d", dfEast);

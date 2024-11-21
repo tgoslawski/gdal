@@ -423,7 +423,17 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
             case L_PUNKT:
             { /* point */
                 oGType = wkbPointZM;
-              
+                if (poParent->papoBuiltGeometries[oNextSerial.lNr] == nullptr ||
+                    poParent->papoBuiltGeometries[oNextSerial.lNr]
+                            ->getGeometryType() != wkbPointZM)
+                {
+                    // This should not happen under normal operation.
+                    CPLError(CE_Warning, CPLE_AppDefined,
+                             "Point or symbol %li may have a broken geometry",
+                             oNextSerial.lNr);
+                    // return NULL;
+                    break;
+                }
                 const OGRPoint *poPoint =
                     poParent->papoBuiltGeometries[oNextSerial.lNr]->toPoint();
                 poGeom.reset(poPoint->clone());
