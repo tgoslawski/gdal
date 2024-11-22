@@ -734,15 +734,16 @@ void OGRSOSIDataSource::buildOGRMultiPoint(int nNumCoo, long iSerial)
     double dfEast = 0.0;
     double dfNorth = 0.0;
     double dfHeight = 0.0;
+    OGRPoint *poP = nullptr;
     for (i = (nNumCoo > 1) ? 2 : 1; i <= nNumCoo; i++)
     {
         dfHeight = LC_GetHoyde(i);
         LC_GetTK(i, &dfEast, &dfNorth);
         if (dfHeight != HOYDE_MANGLER) {
-            OGRPoint poP = OGRPoint(dfEast, dfNorth, dfHeight);
+            poP = OGRPoint(dfEast, dfNorth, dfHeight);
         }
         else {
-            OGRPoint poP = OGRPoint(dfEast, dfNorth);
+            poP = OGRPoint(dfEast, dfNorth);
         }
         poMP->addGeometry(&poP); /*poP will be cloned before returning*/
     }
