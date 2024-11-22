@@ -765,7 +765,6 @@ void OGRSOSIDataSource::buildOGRLineString(int nNumCoo, long iSerial)
     for (i = 1; i <= nNumCoo; i++)
     {
         dfHeight = LC_GetHoyde(i);
-        CPLError(CE_Warning, CPLE_AppDefined, "height: %d", dfHeight);
         LC_GetTK(i, &dfEast, &dfNorth);
         if (dfHeight != HOYDE_MANGLER) {
             poLS->setPoint(i - 1, dfEast, dfNorth, dfHeight);
