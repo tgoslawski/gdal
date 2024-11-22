@@ -438,8 +438,11 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                 {
                     // This should not happen under normal operation.
                     CPLError(CE_Warning, CPLE_AppDefined,
-                             "Point or symbol %li may have a broken geometry %s",
-                             oNextSerial.lNr, poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType());
+                             "Point or symbol %li may have a broken geometry",
+                             oNextSerial.lNr);
+                    CPLError(CE_Warning, CPLE_AppDefined,
+                             "GT: %li",
+                             poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType());
                     // return NULL;
                     break;
                 }
