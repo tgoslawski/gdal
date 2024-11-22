@@ -874,14 +874,17 @@ void OGRSOSIDataSource::buildOGRPoint(long iSerial)
 {
     double dfEast = 0, dfNorth = 0, dfHeight = 0;
     dfHeight = LC_GetHoyde(1);
+    OGRPoint poP;
+
     LC_GetTK(1, &dfEast, &dfNorth);
     /*  CPLError(CE_Warning, CPLE_AppDefined, "height: %lf", dfHeight);
         CPLError(CE_Warning, CPLE_AppDefined, "east: %lf", dfEast);
         CPLError(CE_Warning, CPLE_AppDefined, "north: %lf", dfNorth); */
     if (dfHeight != HOYDE_MANGLER) {
-        papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth, dfHeight);
+        poP = OGRPoint(dfEast, dfNorth, dfHeight);
     }
     else {
-        papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth);
+        poP = OGRPoint(dfEast, dfNorth);
     }
+    papoBuiltGeometries[iSerial] = poP;
 }

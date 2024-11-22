@@ -431,7 +431,10 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
             case L_PUNKT:
             { /* point */
                 oGType = wkbPoint25D;
-                if (poParent->papoBuiltGeometries[oNextSerial.lNr])
+                if (poParent->papoBuiltGeometries[oNextSerial.lNr] == nullptr ||
+                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbPoint ||
+                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbPoint25D
+                    )
                 {
                     // This should not happen under normal operation.
                     CPLError(CE_Warning, CPLE_AppDefined,
