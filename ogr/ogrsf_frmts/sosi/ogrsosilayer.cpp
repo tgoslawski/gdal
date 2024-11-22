@@ -431,18 +431,12 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
             case L_PUNKT:
             { /* point */
                 oGType = wkbPoint25D;
-                if (poParent->papoBuiltGeometries[oNextSerial.lNr] == nullptr ||
-                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbPoint ||
-                    poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType() != wkbPoint25D
-                    )
+                if (poParent->papoBuiltGeometries[oNextSerial.lNr])
                 {
                     // This should not happen under normal operation.
                     CPLError(CE_Warning, CPLE_AppDefined,
                              "Point or symbol %li may have a broken geometry",
                              oNextSerial.lNr);
-                    CPLError(CE_Warning, CPLE_AppDefined,
-                             "GT: %li",
-                             poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType());
                     // return NULL;
                     break;
                 }
