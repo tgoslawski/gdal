@@ -879,7 +879,10 @@ void OGRSOSIDataSource::buildOGRPoint(long iSerial)
     /*  CPLError(CE_Warning, CPLE_AppDefined, "height: %lf", dfHeight);
         CPLError(CE_Warning, CPLE_AppDefined, "east: %lf", dfEast);
         CPLError(CE_Warning, CPLE_AppDefined, "north: %lf", dfNorth); */
-    
-    papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth, dfHeight);
-
+    if (dfHeight != HOYDE_MANGLER) {
+        papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth, dfHeight);
+    }
+    else {
+        papoBuiltGeometries[iSerial] = new OGRPoint(dfEast, dfNorth);
+    }
 }
