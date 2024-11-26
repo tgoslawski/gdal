@@ -431,6 +431,9 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
             case L_PUNKT:
             { /* point */
                 oGType = wkbPoint25D;
+                oGType = poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType();
+                CPLError(CE_Failure, CPLE_OpenFailed,
+                         "Geom type %li.", oGType);
 
                 const OGRPoint *poPoint =
                     poParent->papoBuiltGeometries[oNextSerial.lNr]->toPoint();
