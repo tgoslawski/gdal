@@ -431,10 +431,22 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
             case L_PUNKT:
             { /* point */
                 oGType = wkbPoint25D;
-                oGType = poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType();
-                CPLError(CE_Failure, CPLE_OpenFailed,
-                         "Geom type %d.", oGType);
-
+                if (poParent->papoBuiltGeometries[oNextSerial.lNr] == nullptr ||
+                    (poParent->papoBuiltGeometries[oNextSerial.lNr]->getGeometryType() != wkbPoint &&
+                    poParent->papoBuiltGeometries[oNextSerial.lNr]->getGeometryType() != wkbPoint25D &&
+                    poParent->papoBuiltGeometries[oNextSerial.lNr]->getGeometryType() != wkbPointZM)
+                    )
+                {
+                    // This should not happen under normal operation.
+                    CPLError(CE_Warning, CPLE_AppDefined,
+                             "Point or symbol %li may have a broken geometry",
+                             oNextSerial.lNr);
+                    // return NULL;
+                    break;
+                }
+                else {
+                    oGType = poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType();
+                }
                 const OGRPoint *poPoint =
                     poParent->papoBuiltGeometries[oNextSerial.lNr]->toPoint();
                 poGeom.reset(poPoint->clone());
