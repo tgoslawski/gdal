@@ -390,9 +390,6 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                     // return NULL;
                     break;
                 }
-                else {
-                        oGType = poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType();
-                    }
                 const OGRLineString *poCurve =
                     poParent->papoBuiltGeometries[oNextSerial.lNr]
                         ->toLineString();
@@ -432,7 +429,7 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
             }
             case L_PUNKT:
             { /* point */
-                oGType = wkbPoint25D;
+                oGType = wkbPoint;
                 if (poParent->papoBuiltGeometries[oNextSerial.lNr] == nullptr ||
                     (poParent->papoBuiltGeometries[oNextSerial.lNr]->getGeometryType() != wkbPoint &&
                     poParent->papoBuiltGeometries[oNextSerial.lNr]->getGeometryType() != wkbPoint25D &&
@@ -445,9 +442,6 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                              oNextSerial.lNr);
                     // return NULL;
                     break;
-                }
-                else {
-                    oGType = poParent->papoBuiltGeometries[oNextSerial.lNr] ->getGeometryType();
                 }
                 const OGRPoint *poPoint =
                     poParent->papoBuiltGeometries[oNextSerial.lNr]->toPoint();
@@ -470,10 +464,10 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
         if (poGeom == nullptr)
             continue; /* skipping L_HODE and unrecognized groups */
         /* find better way to secure this */
-        // if (oGType != poFeatureDefn->GetGeomType())
-        // {
-        //     continue; /* skipping features that are not the correct geometry */
-        // }
+        if (oGType != poFeatureDefn->GetGeomType())
+        {
+            continue; /* skipping features that are not the correct geometry */
+        }
 
         OGRFeature *poFeature = new OGRFeature(poFeatureDefn);
 
@@ -498,13 +492,13 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                 const auto oIter = poHeaderDefn->find(poElements[k].GetName());
                 const int iHNr =
                     oIter == poHeaderDefn->end() ? -1 : oIter->second;
-                if (iHNr == -1)
-                {
-                    CPLError(CE_Warning, CPLE_AppDefined,
-                             "Could not find field definition for %s.",
-                             poElements[k].GetName());
-                    continue;
-                }
+                //if (iHNr == -1)
+                //{
+                //    CPLError(CE_Warning, CPLE_AppDefined,
+                //             "Could not find field definition for %s.",
+                //             poElements[k].GetName());
+                //    continue;
+                //}
                 OGRFieldType nType = poElements[k].GetType();
                 switch (nType)
                 {
