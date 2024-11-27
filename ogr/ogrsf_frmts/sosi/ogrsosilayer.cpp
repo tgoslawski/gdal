@@ -267,7 +267,7 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                         break;
                     }
                     OGRGeometry *geom = poParent->papoBuiltGeometries[nRefNr];
-                    if (geom->getGeometryType() == wkbLineString || geom->getGeometryType() == wkbMultiLineString25D || geom->getGeometryType() == wkbMultiLineStringZM)
+                    if (geom->getGeometryType() == wkbLineString || geom->getGeometryType() == wkbLineString25D || geom->getGeometryType() == wkbLineStringZM)
                     {
                         OGRLineString *poCurve = geom->toLineString();
                         if (nRefStatus == LC_MED_DIG)
@@ -334,7 +334,7 @@ OGRFeature *OGRSOSILayer::GetNextFeature()
                             }
                             OGRGeometry *geom =
                                 poParent->papoBuiltGeometries[nRefNr];
-                            if (geom->getGeometryType() == wkbLineString || geom->getGeometryType() == wkbMultiLineString25D || geom->getGeometryType() == wkbMultiLineStringZM)
+                            if (geom->getGeometryType() == wkbLineString || geom->getGeometryType() == wkbLineString25D || geom->getGeometryType() == wkbLineStringZM)
                             {
                                 OGRLineString *poCurve = geom->toLineString();
                                 if (poInner && nRefStatus == LC_MED_DIG)
