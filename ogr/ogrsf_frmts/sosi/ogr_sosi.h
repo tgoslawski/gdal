@@ -23,8 +23,6 @@
 
 /* interpolation of arcs(BUEP) creates # points for a full circle */
 #define ARC_INTERPOLATION_FULL_CIRCLE 36.0
-/* static value for LC_GetTH/LC_GetHoyde returned when there's no Z value */
-#define HOYDE_MANGLER  -999.999
 
 typedef std::map<std::string, std::string> S2S;
 typedef std::map<std::string, unsigned int> S2I;
