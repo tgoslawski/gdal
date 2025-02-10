@@ -449,7 +449,7 @@ addSimpleType(poTypes, "DAMLENGDE", "damLengde", OFTReal);
 
 addSimpleType(poTypes, "DAMTYPE", "damType", OFTString);
 
-addSimpleType(poTypes, "DATAFANGSTDATO", "datafangstdato", OFTDateTime);
+addSimpleType(poTypes, "DATAFANGSTDATO", "datafangstdato", OFTString);
 
 addSimpleType(poTypes, "DATAUTTAKSDATO", "datauttaksdato", OFTDateTime);
 
@@ -3215,7 +3215,7 @@ ETASJEDATAType.setElement(3, "sumBruksarealTotalt", OFTReal);
 ETASJEDATAType.setElement(2, "sumBruksarealTilAnnet", OFTReal);
 ETASJEDATAType.setElement(1, "sumBruksarealTilBolig", OFTReal);
 FELTREGISTRERTType.setElement(2, "ajourføring", OFTString);
-FELTREGISTRERTType.setElement(1, "datafangstdato", OFTDateTime);
+FELTREGISTRERTType.setElement(1, "datafangstdato", OFTString);
 FELTREGISTRERTType.setElement(0, "feltregistrertAv", OFTString);
 FIRMA_EIERType.setElement(2, "adresse", OFTString);
 FIRMA_EIERType.setElement(0, "firmanavn", OFTString);
